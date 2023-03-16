@@ -14,9 +14,17 @@ var usersRouter = require('./routes/users');
 var hotelsRouter = require('./routes/hotels');
 var roomsRouter = require('./routes/rooms');
 
-var db = require("./models");
-db.sequelize.sync({ force: false })
 
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger-output.json')
+const bodyParser = require('body-parser')
+
+
+
+var db = require("./models");
+// db.sequelize.sync({ force: true })
+
+db.sequelize.sync({ force: false });
 var app = express();
 
 // view engine setup
@@ -28,6 +36,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.json())
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(session({
   secret: 'random text',
@@ -44,12 +55,12 @@ app.use('/hotels', hotelsRouter);
 app.use('/rooms', roomsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
