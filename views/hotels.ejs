@@ -9,6 +9,9 @@
     <div class="list-group">
       <% hotels.forEach(function(hotel) { %>
         <div class="row px-3 py-1 w-100">
+          <span class="col py-1 bg-info " style="color: rgb(202, 35, 35)";>
+            Number: <%=hotel.id%>
+          </span>
           <span class="col py-1 bg-info"><%=hotel.Name%><span class="right"><%=hotel.Location%></span></span>
           <a href="/rooms/<%=hotel.id%>" class="col btn btn-secondary"> Rent a room</a>  
           <a href="/hotels/<%=hotel.id%>" class="col btn btn-secondary"> Details</a> 

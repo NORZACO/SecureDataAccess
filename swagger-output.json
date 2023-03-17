@@ -88,21 +88,6 @@
       }
     },
     "/hotels/": {
-      "get": {
-        "tags": [
-          "Hotels"
-        ],
-        "description": "Gets the list of all available hotels.",
-        "produces": [
-          "text/html"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "post": {
         "tags": [
           "Hotels"
@@ -117,6 +102,21 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Hotels"
+        ],
+        "description": "Gets the list of all available hotels.",
+        "produces": [
+          "text/html"
+        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
