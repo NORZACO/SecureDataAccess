@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5rem;
+            outline: none;
+        }
+
+        .chat-input button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 0.5rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-bottom: 0.5rem;
+        }
+
+
+        .message-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .message-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-text {
+            margin-bottom: 0.25rem;
+        }
+        
+        .message-info {
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Chat Room</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be added here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type your message here...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById("send-button").addEventListener("click", sendMessage);
+
+        function sendMessage() {
+            const inputElement = document.getElementById("message-input");
+            const messageText = inputElement.value.trim();
+        
+            if (messageText) {
+                const chatMessages = document.getElementById("chat-messages");
+                const messageContainer = document.createElement("div");
+                messageContainer.classList.add("message-container");
+        
+                // Create avatar
+                const avatar = document.createElement("div");
+                avatar.classList.add("avatar");
+                avatar.textContent = "U"; // Replace 'U' with the user's initial or an image URL
+                messageContainer.appendChild(avatar);
+        
+                // Create message content container
+                const messageContent = document.createElement("div");
+                messageContent.classList.add("message-content");
+        
+                // Create message text
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message-text");
+                messageElement.textContent = messageText;
+                messageContent.appendChild(messageElement);
+        
+                // Create message info
+                const messageInfo = document.createElement("div");
+                messageInfo.classList.add("message-info");
+        
+                // Add time
+                const currentTime = new Date();
+                const time = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                messageInfo.textContent = time;
+        
+                // Add seen status
+                messageInfo.innerHTML += " &#8226; Seen";
+                messageContent.appendChild(messageInfo);
+        
+                messageContainer.appendChild(messageContent);
+                chatMessages.appendChild(messageContainer);
+                inputElement.value = "";
+            }
+        }
+        
+    </script>
+</body>
+
+</html>
