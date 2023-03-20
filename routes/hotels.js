@@ -1,4 +1,5 @@
 var express = require('express');
+var createError = require('http-errors');
 var router = express.Router();
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
@@ -7,7 +8,7 @@ var db = require("../models");
 var hotelService = new HotelService(db);
 
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function (req, res, next) {
   // #swagger.tags = ['Hotels']
   // #swagger.description = "Gets the list of all available hotels."
   // #swagger.produces = ['text/html']
@@ -17,8 +18,7 @@ router.get('/', async function(req, res, next) {
 
 
 
-
-router.get('/:hotelId', async function(req, res, next) {
+router.get('/:hotelId', async function (req, res, next) {
   const hotel = await hotelService.getHotelDetails(req.params.hotelId);
   res.render('hotelDetails', { hotel: hotel });
 });
@@ -26,7 +26,7 @@ router.get('/:hotelId', async function(req, res, next) {
 
 
 
-router.post('/:hotelId/rate', jsonParser, async function(req, res, next) {
+router.post('/:hotelId/rate', jsonParser, async function (req, res, next) {
   let value = req.body.Value;
   let userId = req.body.UserId;
   await hotelService.makeARate(userId, req.params.hotelId, value);
@@ -37,7 +37,30 @@ router.post('/:hotelId/rate', jsonParser, async function(req, res, next) {
 
 
 
-router.post('/', jsonParser, async function(req, res, next) {
+router.post('/', jsonParser, async function (req, res, next) {
+// #swagger.tags = ['Hotels']
+// #swagger.description = "Creates a new hotel."
+/* #swagger.parameters['body'] =  {
+  "name": "body",
+  "in": "body",
+    "schema": {
+      $ref: "#/definitions/Hotel"
+    }
+  }
+*/
+
+  if(!req.body.Name || !req.body.Location) {
+    return next(createError(400, 'Both Name and Location need to be provided in the request'));
+  }
+  let Name = req.body.Name;
+  let Location = req.body.Location;
+  console.log(Name, Location);
+  await hotelService.create(Name, Location);
+  res.status(200).end()
+});
+
+// Create a new hotel
+// router.post('/', async (req, res, next) => {
   // #swagger.tags = ['Hotels']
   // #swagger.description = "Creates a new hotel."
   /* #swagger.parameters['body'] =  {
@@ -48,27 +71,25 @@ router.post('/', jsonParser, async function(req, res, next) {
       }
     }
   */
-  if(req.body.Name == null || req.body.Location == null) {
-    next(createError(400, 'Both Name and Location need to be provided in the request'));
-  }
-  let Name = req.body.Name;
-  let Location = req.body.Location;
-  await hotelService.create(Name, Location);
-  res.status(200).end()
-});
+//   const { Name, Location } = req.body;
+//   if (!Name || !Location)
+//     return next(createError(400, 
+//       'Both Name and Location need to be provided in the request')
+//     );
+//   await hotelService.create(Name, Location);
+//   res.status(200).end();
+// });
 
 
 
 
-
-
-router.delete('/', jsonParser, async function(req, res, next) {
+router.delete('/', jsonParser, async function (req, res, next) {
   let id = req.body.id;
   await hotelService.deleteHotel(id);
   res.end()
 });
 
-router.delete('/:id', jsonParser, async function(req, res, next) {
+router.delete('/:id', jsonParser, async function (req, res, next) {
   await hotelService.deleteHotel(req.params.id);
   res.end()
 });
